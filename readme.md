@@ -68,20 +68,16 @@ Les données extraites sont ensuite **structurées et insérées dans une base d
 ```bash
 /dtc-scraper
 │
+├── tests/
+│   ├── acceptance/ # Tests d'acceptances
+│   └── unit/       # Tests unitaires
+│
 ├── src/
-│ ├── main.ts
-│ ├── scraper/
-│ │ ├── fetchQuote.ts
-│ │ ├── parseQuote.ts
-│ │ ├── getNextLink.ts
-│ │ └── index.ts
-│ ├── db/
-│ │ ├── connect.ts
-│ │ ├── insertQuote.ts
-│ │ └── schema.sql
-│ └── utils/
-│ ├── logger.ts
-│ └── helpers.ts
+│   ├── main.ts
+│   ├── scraper/    # Gestion du scraping, des erreurs et des délais
+│   ├── parser/     # Récupération des éléments a partir d'une page HTML
+│   ├── db/         # Connexion et insertion de la base de données
+│   └── utils/      # Utilitaires (Loggers, helpers...)
 │
 ├── package.json
 ├── tsconfig.json
