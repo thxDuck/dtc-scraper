@@ -1,8 +1,10 @@
-import assert from "node:assert";
-import test, { describe } from "node:test";
+import { describe, expect, test } from "vitest"
 
 describe("Test runner", () => {
-  test("Vérification d'une égalité", () => {
-    assert.strictEqual(true, true);
-  });
-});
+	test("Tests OK", () => {
+		expect(true).toStrictEqual(true)
+	})
+	test.fails("Test NOK", () => {
+		expect(true).toStrictEqual(false)
+	})
+})
