@@ -21,13 +21,18 @@ export class QuoteExtractor implements IQuoteExtractor {
 		if (!titleElement) console.warn("Parser - extractTitle : Title not found")
 		return titleElement ?? ""
 	}
+	private extractAuthor(): string {
+		const authorElement = this.html.querySelector(".wp-block-post-author-name a")?.innerText ?? null
+		if (!authorElement) console.warn("Parser - extractTitle : Title not found")
+		return authorElement ?? ""
+	}
 	public parse(): Omit<Quote, "id"> {
 		return {
 			source_id: "",
 			title: this.extractTitle(),
 			url: "",
 			type: QuoteType.text,
-			author: "",
+			author: this.extractAuthor(),
 			content_raw: "",
 			posted_at: new Date().toISOString(),
 			scraped_at: new Date().toISOString(),
