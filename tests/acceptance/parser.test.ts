@@ -12,7 +12,7 @@ const getHtmlContent = (): string => {
 
 const htmlParser: IHtmlParser = parse
 const EMPTY_HTML = "<body> <main></main> </body>"
-const quoteExpected: Quote = {
+const expectedQuote: Quote = {
 	title: "🎲 La vie est un jeu de rôle",
 	id: "",
 	source_id: "",
@@ -20,8 +20,8 @@ const quoteExpected: Quote = {
 	type: QuoteType.text,
 	author: "Chat-nonyme",
 	content_raw: "",
-	posted_at: "",
-	scraped_at: "",
+	postedAt: new Date("2005-03-06T23:00:07.000Z").toISOString(),
+	scrapedAt: "",
 }
 
 describe("Quote parser", () => {
@@ -30,7 +30,7 @@ describe("Quote parser", () => {
 			const htmlContent = getHtmlContent()
 			const parser = new QuoteExtractor(htmlContent, htmlParser)
 			const { title } = parser.parse()
-			expect(title).toStrictEqual(quoteExpected.title)
+			expect(title).toStrictEqual(expectedQuote.title)
 		})
 		test("Chaine vide si titre non trouvé", () => {
 			const htmlContent = EMPTY_HTML
@@ -45,7 +45,7 @@ describe("Quote parser", () => {
 			const htmlContent = getHtmlContent()
 			const parser = new QuoteExtractor(htmlContent, htmlParser)
 			const { author } = parser.parse()
-			expect(author).toStrictEqual(quoteExpected.author)
+			expect(author).toStrictEqual(expectedQuote.author)
 		})
 		test("Chaine vide si non trouvé", () => {
 			const htmlContent = EMPTY_HTML
@@ -55,7 +55,18 @@ describe("Quote parser", () => {
 		})
 	})
 	describe("Date de publication", () => {
-		test.todo("Doit extraire la date de publication de la quote")
+		test("Doit extraire la date de publication de la quote", () => {
+			const htmlContent = getHtmlContent()
+			const parser = new QuoteExtractor(htmlContent, htmlParser)
+			const { postedAt } = parser.parse()
+			expect(postedAt).toStrictEqual(expectedQuote.postedAt)
+		})
+		test("Chaine vide si non trouvé", () => {
+			const htmlContent = EMPTY_HTML
+			const parser = new QuoteExtractor(htmlContent, htmlParser)
+			const { postedAt } = parser.parse()
+			expect(postedAt).toStrictEqual("")
+		})
 	})
 	describe("ID source de la quote", () => {
 		test.todo("Doit extraire l'url de la quote")

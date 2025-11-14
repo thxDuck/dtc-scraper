@@ -22,10 +22,22 @@ export class QuoteExtractor implements IQuoteExtractor {
 		return titleElement ?? ""
 	}
 	private extractAuthor(): string {
-		const authorElement = this.html.querySelector(".wp-block-post-author-name a")?.innerText ?? null
+		const authorElement =
+			this.html.querySelector(".wp-block-post-author-name a")?.innerText ?? null
 		if (!authorElement) console.warn("Parser - extractTitle : Title not found")
 		return authorElement ?? ""
 	}
+	private extractPostDate(): string {
+		const htmlElement = this.html.querySelector(
+			"main time",
+		) as HTMLElement | null
+
+		const postDate = htmlElement?.getAttribute("datetime") ?? null
+		if (!postDate)
+			console.warn("Parser - extractPostDate : post date not found")
+		return postDate ? new Date(postDate).toISOString() : ""
+	}
+
 	public parse(): Omit<Quote, "id"> {
 		return {
 			source_id: "",
@@ -34,8 +46,8 @@ export class QuoteExtractor implements IQuoteExtractor {
 			type: QuoteType.text,
 			author: this.extractAuthor(),
 			content_raw: "",
-			posted_at: new Date().toISOString(),
-			scraped_at: new Date().toISOString(),
+			postedAt: this.extractPostDate(),
+			scrapedAt: new Date(0).toISOString(),
 		}
 	}
 }
