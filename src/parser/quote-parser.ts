@@ -23,24 +23,19 @@ export class QuoteExtractor implements IQuoteExtractor {
 		return titleElement ?? ""
 	}
 	private extractAuthor(): string {
-		const authorElement =
-			this.html.querySelector(".wp-block-post-author-name a")?.innerText ?? null
+		const authorElement = this.html.querySelector(".wp-block-post-author-name a")?.innerText ?? null
 		if (!authorElement) console.warn("Parser - extractTitle : Title not found")
 		return authorElement ?? ""
 	}
 	private extractPostDate(): string {
-		const htmlElement = this.html.querySelector(
-			"main time",
-		) as HTMLElement | null
+		const htmlElement = this.html.querySelector("main time") as HTMLElement | null
 
 		const postDate = htmlElement?.getAttribute("datetime") ?? null
-		if (!postDate)
-			console.warn("Parser - extractPostDate : post date not found")
+		if (!postDate) console.warn("Parser - extractPostDate : post date not found")
 		return postDate ? new Date(postDate).toISOString() : ""
 	}
 	private extractContentRaw(): string {
-		const htmlContent =
-			this.html.querySelector("main .entry-content p")?.innerHTML ?? null
+		const htmlContent = this.html.querySelector("main .entry-content p")?.innerHTML ?? null
 		return htmlContent ? cleanTextSpaces(htmlContent) : ""
 	}
 
