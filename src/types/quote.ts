@@ -15,7 +15,7 @@ export interface Quote {
 	url: string
 	type: QuoteType
 	author: string
-	content_raw: string
+	rawContent: string
 	postedAt: IsoDateString
 	scrapedAt: IsoDateString
 }

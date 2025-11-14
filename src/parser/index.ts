@@ -1,4 +1,5 @@
 import type { HTMLElement } from "node-html-parser"
+import { cleanTextSpaces } from "../helpers"
 import { type Quote, QuoteType } from "../types"
 
 export interface IQuoteExtractor {
@@ -37,17 +38,24 @@ export class QuoteExtractor implements IQuoteExtractor {
 			console.warn("Parser - extractPostDate : post date not found")
 		return postDate ? new Date(postDate).toISOString() : ""
 	}
+	private extractContentRaw(): string {
+		const htmlContent =
+			this.html.querySelector("main .entry-content p")?.innerHTML ?? null
+		return htmlContent ? cleanTextSpaces(htmlContent) : ""
+	}
 
 	public parse(): Omit<Quote, "id"> {
-		return {
+		const quote: Omit<Quote, "id"> = {
 			source_id: "",
 			title: this.extractTitle(),
 			url: "",
-			type: QuoteType.text,
+			type: QuoteType.image,
 			author: this.extractAuthor(),
-			content_raw: "",
+			rawContent: this.extractContentRaw(),
 			postedAt: this.extractPostDate(),
-			scrapedAt: new Date(0).toISOString(),
+			scrapedAt: new Date().toISOString(),
 		}
+		quote.type = quote.rawContent ? QuoteType.text : QuoteType.image
+		return quote
 	}
 }
