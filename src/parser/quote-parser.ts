@@ -1,9 +1,9 @@
-import type { HTMLElement } from "node-html-parser"
+import { HTMLElement } from "node-html-parser"
 import { cleanTextSpaces } from "../helpers"
-import { type Quote, QuoteType } from "../types"
+import { type Quote, type QuoteLine, QuoteType } from "../types"
 
 export interface IQuoteExtractor {
-	parse(): Omit<Quote, "id">
+	parseMetadata(): Omit<Quote, "id">
 }
 
 export interface IHtmlParser {
@@ -34,12 +34,16 @@ export class QuoteExtractor implements IQuoteExtractor {
 		if (!postDate) console.warn("Parser - extractPostDate : post date not found")
 		return postDate ? new Date(postDate).toISOString() : ""
 	}
+
+	get htmlContent(): HTMLElement | null {
+		return this.html.querySelector("main .entry-content p") ?? null
+	}
 	private extractContentRaw(): string {
-		const htmlContent = this.html.querySelector("main .entry-content p")?.innerHTML ?? null
+		const htmlContent = this.htmlContent?.innerHTML ?? null
 		return htmlContent ? cleanTextSpaces(htmlContent) : ""
 	}
 
-	public parse(): Omit<Quote, "id"> {
+	public parseMetadata(): Omit<Quote, "id"> {
 		const quote: Omit<Quote, "id"> = {
 			source_id: "",
 			title: this.extractTitle(),
@@ -53,4 +57,59 @@ export class QuoteExtractor implements IQuoteExtractor {
 		quote.type = quote.rawContent ? QuoteType.text : QuoteType.image
 		return quote
 	}
+
+	public parseLines(): Omit<QuoteLine, "id">[] {
+		const p = this.htmlContent
+
+		const lines: QuoteLine[] = []
+		if (!p) return lines
+
+		// Chaque "bloc" de ligne est un span + texte suivant + br
+		// On récupère les enfants de <p> en conservant l'ordre
+		const children = p.childNodes
+
+		let currentOrder = 0
+
+		for (let i = 0; i < children.length; i++) {
+			const node = children[i]
+
+			// On ne traite que les <span>
+			if (node instanceof HTMLElement && node.tagName === "SPAN") {
+				const span = node
+
+				const rawAuthor = span.text.trim()
+				const author = rawAuthor.replace(/:$/, "") // enlever le ":" final
+				const color = extractColor(span.getAttribute("style") ?? "") ?? ""
+
+				// Le message est dans le texte juste après le <span>
+				let message = ""
+				const next = children[i + 1]
+
+				if (typeof next === "string") {
+					message = (next as string)?.trim()
+				} else if (next?.nodeType === 3) {
+					// node-html-parser "text node"
+					message = (next.rawText ?? "").trim()
+				}
+
+				lines.push({
+					author,
+					color,
+					message,
+					order: currentOrder++,
+				})
+			}
+		}
+
+		return lines
+	}
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   Helpers                                  */
+/* -------------------------------------------------------------------------- */
+function extractColor(style: string): string | null {
+	const match = style.match(/color:\s*([^;]+)/i)
+	if (!match?.[1]) return null
+	return match ? match[1].trim() : null
 }

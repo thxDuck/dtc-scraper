@@ -19,3 +19,11 @@ export interface Quote {
 	postedAt: IsoDateString
 	scrapedAt: IsoDateString
 }
+
+export interface QuoteLine {
+	id?: number
+	author: string
+	color: string
+	message: string
+	order: number
+}
