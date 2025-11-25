@@ -1,6 +1,6 @@
 import { HTMLElement } from "node-html-parser"
 import { cleanTextSpaces } from "../helpers"
-import { type Quote, type QuoteLine, QuoteType } from "../types"
+import type { Quote, QuoteLine } from "../types"
 
 export interface IQuoteExtractor {
 	parseMetadata(): Omit<Quote, "id">
@@ -45,16 +45,15 @@ export class QuoteExtractor implements IQuoteExtractor {
 
 	public parseMetadata(): Omit<Quote, "id"> {
 		const quote: Omit<Quote, "id"> = {
-			source_id: "",
 			title: this.extractTitle(),
 			url: "",
-			type: QuoteType.image,
+			type: "QUOTE_IMAGE",
 			author: this.extractAuthor(),
 			rawContent: this.extractContentRaw(),
 			postedAt: this.extractPostDate(),
 			scrapedAt: new Date().toISOString(),
 		}
-		quote.type = quote.rawContent ? QuoteType.text : QuoteType.image
+		quote.type = quote.rawContent ? "QUOTE_TEXT" : "QUOTE_IMAGE"
 		return quote
 	}
 

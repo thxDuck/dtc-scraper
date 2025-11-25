@@ -21,6 +21,9 @@
       "recommended": true,
       "complexity": {
         "noUselessSwitchCase": "off"
+      },
+      "style": {
+        "useImportType": "warn"
       }
     }
   },

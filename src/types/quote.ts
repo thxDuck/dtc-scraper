@@ -1,7 +1,5 @@
-export enum QuoteType {
-	text = "TEXT",
-	image = "IMAGE",
-}
+export type QuoteType = "QUOTE_TEXT" | "QUOTE_IMAGE" | "BLOG"
+
 
 /**
  * Date au format ISO
@@ -9,8 +7,7 @@ export enum QuoteType {
 export type IsoDateString = string
 
 export interface Quote {
-	id: string
-	source_id: string
+	id: number
 	title: string
 	url: string
 	type: QuoteType

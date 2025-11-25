@@ -19,6 +19,8 @@
 		"vitest": "^4.0.8"
 	},
 	"dependencies": {
-		"node-html-parser": "^7.0.1"
+		"node-html-parser": "^7.0.1",
+		"sequelize": "^6.37.7",
+		"sqlite3": "^5.1.7"
 	}
 }

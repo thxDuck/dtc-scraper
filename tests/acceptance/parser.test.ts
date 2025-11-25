@@ -4,7 +4,7 @@ import parse from "node-html-parser"
 import { describe, expect, test } from "vitest"
 import { cleanTextSpaces } from "../../src/helpers"
 import { type IHtmlParser, QuoteExtractor } from "../../src/parser/quote-parser"
-import { type Quote, type QuoteLine, QuoteType } from "../../src/types"
+import type { Quote, QuoteLine } from "../../src/types"
 
 const quoteFilePath = path.resolve("tests/fixtures/quote_1.html")
 const getHtmlContent = (): string => {
@@ -21,10 +21,9 @@ const expectedContent = `<span class="decoration" style="font-weight: bold;color
 
 const expectedQuote: Quote = {
 	title: "🎲 La vie est un jeu de rôle",
-	id: "",
-	source_id: "",
+	id: 7,
 	url: "",
-	type: QuoteType.text,
+	type: "QUOTE_TEXT",
 	author: "Chat-nonyme",
 	rawContent: cleanTextSpaces(expectedContent),
 	postedAt: new Date("2005-03-06T23:00:07.000Z").toISOString(),
@@ -127,13 +126,13 @@ describe("Quote parser", () => {
 				const htmlContent = getHtmlContent()
 				const parser = new QuoteExtractor(htmlContent, htmlParser)
 				const { type } = parser.parseMetadata()
-				expect(type).toStrictEqual(QuoteType.text)
+				expect(type).toStrictEqual("QUOTE_TEXT")
 			})
 			test("Si le contenu est vide, quote de type image", () => {
 				const htmlContent = EMPTY_HTML
 				const parser = new QuoteExtractor(htmlContent, htmlParser)
 				const { type } = parser.parseMetadata()
-				expect(type).toStrictEqual(QuoteType.image)
+				expect(type).toStrictEqual("QUOTE_IMAGE")
 			})
 		})
 	})

@@ -40,12 +40,11 @@ Les données extraites sont ensuite **structurées et insérées dans une base d
 | Champ         | Description                                                              | Exemple                                        |
 | ------------- | ------------------------------------------------------------------------ | ---------------------------------------------- |
 | `id`          | Identifiant unique de la quote dans la base postgres (ordre de création) | `1234`                                         |
-| `source_id`   | Identifiant unique de la quote dans la base postgres (ordre de création) | `1234`                                         |
 | `title`       | Titre de la quote                                                        | `😗🎂 Level up`                                  |
 | `url`         | URL complète de la quote                                                 | `https://danstonchat.com/quote/1234.html`      |
 | `type`        | Type de quote : `text` ou `image`                                        | `TEXT`                                         |
 | `author`      | Auteur de la quote                                                       | `thxDuck`                                      |
-| `content_raw` | Contenu textuel brut (si type = text)                                    | `"<thxDuck> : T'as fait quoi hier soir ? ..."` |
+| `raw_content` | Contenu textuel brut (si type = text)                                    | `"<thxDuck> : T'as fait quoi hier soir ? ..."` |
 | `posted_at`   | Date de récupération ou date d’origine (si disponible)                   | `2012-01-04T12:52:00Z`                         |
 | `scraped_at`  | Date de récupération ou date d’origine (si disponible)                   | `2025-11-13T14:32:00Z`                         |
 
@@ -102,6 +101,12 @@ Les données extraites sont ensuite **structurées et insérées dans une base d
 - Gestion des quotes sous forme d’images
 - Interface web de visualisation et de recherche
 - Intégration avec une API REST publique
+
+## Ressources
+
+### Liens de quotes spécifiques : 
+
+- **Article de Remouk** : <https://danstonchat.com/blog/20-ans.html>
 
 ---
 
