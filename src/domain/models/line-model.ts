@@ -1,4 +1,4 @@
-import { DataTypes, type InferAttributes, type InferCreationAttributes, Model, type Sequelize, UUIDV4 } from "sequelize"
+import { DataTypes, type InferAttributes, type InferCreationAttributes, Model, type Sequelize } from "sequelize"
 export class Line extends Model<InferAttributes<Line>, InferCreationAttributes<Line>> {
 	declare id?: number
 	declare author: string
@@ -10,8 +10,8 @@ export class Line extends Model<InferAttributes<Line>, InferCreationAttributes<L
 		return Line.init(
 			{
 				id: {
-					type: DataTypes.UUIDV4,
-					defaultValue: UUIDV4,
+					type: DataTypes.INTEGER,
+					autoIncrement: true,
 					primaryKey: true,
 				},
 				author: {
@@ -37,7 +37,8 @@ export class Line extends Model<InferAttributes<Line>, InferCreationAttributes<L
 			},
 			{
 				sequelize,
-				tableName: "quotes",
+				tableName: "lines",
+				modelName: "Lines",
 				timestamps: false,
 			},
 		)

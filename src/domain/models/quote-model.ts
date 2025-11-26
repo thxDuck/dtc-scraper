@@ -6,11 +6,10 @@ import {
 	Model,
 	type Sequelize,
 } from "sequelize"
-import type { IsoDateString, QuoteType } from "../types"
+import type { IsoDateString, QuoteType } from "../../types"
 
 export class Quote extends Model<InferAttributes<Quote>, InferCreationAttributes<Quote>> {
 	declare id: CreationOptional<number>
-	declare order: CreationOptional<number>
 	declare title: string
 	declare url: string
 	declare type: QuoteType
@@ -19,18 +18,13 @@ export class Quote extends Model<InferAttributes<Quote>, InferCreationAttributes
 	declare postedAt: IsoDateString
 	declare scrapedAt: IsoDateString
 
-	static initModel(sequelize: Sequelize) {
-		Quote.init(
+	static initModel(sequelize: Sequelize): typeof Quote {
+		return Quote.init(
 			{
 				id: {
 					type: DataTypes.INTEGER,
 					autoIncrement: true,
 					primaryKey: true,
-				},
-				order: {
-					type: DataTypes.INTEGER,
-					unique: true,
-					field: "order",
 				},
 				title: {
 					type: DataTypes.STRING,
@@ -71,6 +65,7 @@ export class Quote extends Model<InferAttributes<Quote>, InferCreationAttributes
 			{
 				sequelize,
 				tableName: "quotes",
+				modelName: "Quote",
 				timestamps: false,
 			},
 		)

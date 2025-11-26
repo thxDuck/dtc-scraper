@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:18
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-localhost-p4ssw0rd}
+      POSTGRES_DB: ${POSTGRES_NAME:-quote-database}
+      PGDATA: /var/lib/postgresql/18/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped

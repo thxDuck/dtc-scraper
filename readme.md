@@ -33,7 +33,7 @@ Les données extraites sont ensuite **structurées et insérées dans une base d
 
 ---
 
-## 🗃️ Structure des données (fonctionnelle)
+## 🗃️ Structure des données
 
 ### Table quotes
 
@@ -92,7 +92,38 @@ Les données extraites sont ensuite **structurées et insérées dans une base d
 
 - Nodejs v24
 - pnpm
-- Docker (postgres)
+- Docker (ou postgres)
+
+### Postgres dans docker
+
+- Lancement du container contenant Postgres en version 18
+
+```bash
+# Récupère l'image docker puis lance un container en mode détaché (rends la console après execution)
+docker-compose -f ./docker-compose.database.yaml up -d  
+```
+
+- Suppression du docker
+
+```bash
+docker-compose -f ./docker-compose.database.yaml down -v
+```
+
+### 🧪 Tests
+
+Les tests sont réalisés avec Vitest
+⚠️ Les tests d'intégration ont besoin d'une connexion à une base postgres valide.
+
+```bash
+pnpm test:acceptance
+
+# Configuration de la BDD pour les tests d'intégration :
+export POSTGRES_USER="admin"
+export POSTGRES_PASSWORD="localhost-p4ssw0rd"
+export POSTGRES_NAME="quote-database"
+
+pnpm test:integration
+```
 
 ---
 
@@ -104,7 +135,7 @@ Les données extraites sont ensuite **structurées et insérées dans une base d
 
 ## Ressources
 
-### Liens de quotes spécifiques : 
+### Liens de quotes spécifiques
 
 - **Article de Remouk** : <https://danstonchat.com/blog/20-ans.html>
 

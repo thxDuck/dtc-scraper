@@ -2,5 +2,18 @@
     "cSpell.words": [
         "danstonchat",
         "postgres"
+    ],
+    "sqltools.connections": [
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "127.0.0.1",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "quote-database",
+            "password": "localhost-p4ssw0rd",
+            "username": "admin",
+            "database": "quote-database"
+        }
     ]
 }
