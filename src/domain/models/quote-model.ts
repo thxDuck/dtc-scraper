@@ -6,7 +6,9 @@ import {
 	Model,
 	type Sequelize,
 } from "sequelize"
-import type { IsoDateString, QuoteType } from "../../types"
+import type { IsoDateString } from "../../types"
+
+export type QuoteType = "QUOTE_TEXT" | "QUOTE_IMAGE" | "BLOG"
 
 export class Quote extends Model<InferAttributes<Quote>, InferCreationAttributes<Quote>> {
 	declare id: CreationOptional<number>

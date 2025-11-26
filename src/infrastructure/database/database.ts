@@ -1,4 +1,4 @@
-import { Sequelize } from "sequelize"
+import { Sequelize, type SyncOptions } from "sequelize"
 import { Line } from "../../domain/models/line-model"
 import { Quote } from "../../domain/models/quote-model"
 
@@ -58,8 +58,8 @@ export class Database {
 			as: "quote",
 		})
 	}
-	public async syncData(): Promise<void> {
-		await this.sequelize.sync()
+	public async syncData(options?: SyncOptions): Promise<void> {
+		await this.sequelize.sync(options)
 	}
 
 	public async connect(): Promise<void> {

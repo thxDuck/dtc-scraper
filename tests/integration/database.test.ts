@@ -38,8 +38,7 @@ describe("database", () => {
 			expect(error, "La connexion a la base de données a échouée").toBeNull()
 			if (!database) throw new Error()
 
-			await database.syncData()
-			console.log(`Database synchronized !`)
+			await database.syncData({ force: true })
 
 			// @ts-expect-error <Private field access>
 			const pgVersion = await database.getVersion()
@@ -51,8 +50,7 @@ describe("database", () => {
 			expect(error, "La connexion a la base de données a échouée").toBeNull()
 			if (!database) throw new Error()
 
-			await database.syncData()
-			console.log(`Database synchronized !`)
+			await database.syncData({ force: true })
 
 			const quotes = await database.Quote.count()
 			const lines = await database.Line.count()

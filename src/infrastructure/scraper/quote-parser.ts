@@ -1,9 +1,10 @@
 import { HTMLElement } from "node-html-parser"
-import { cleanTextSpaces } from "../helpers"
-import type { Quote, QuoteLine } from "../types"
+import { cleanTextSpaces } from "../../helpers"
+import type { ScrapedQuote, ScrapedQuoteLine } from "./dto/scraped-quote.dto"
 
 export interface IQuoteExtractor {
-	parseMetadata(): Omit<Quote, "id">
+	parseMetadata(): ScrapedQuote
+	parseLines(): ScrapedQuoteLine[]
 }
 
 export interface IHtmlParser {
@@ -24,27 +25,27 @@ export class QuoteExtractor implements IQuoteExtractor {
 	}
 	private extractAuthor(): string {
 		const authorElement = this.html.querySelector(".wp-block-post-author-name a")?.innerText ?? null
-		if (!authorElement) console.warn("Parser - extractTitle : Title not found")
+		if (!authorElement) console.warn("Parser - extractAuthor : Author not found")
 		return authorElement ?? ""
 	}
 	private extractPostDate(): string {
 		const htmlElement = this.html.querySelector("main time") as HTMLElement | null
 
 		const postDate = htmlElement?.getAttribute("datetime") ?? null
-		if (!postDate) console.warn("Parser - extractPostDate : post date not found")
+		if (!postDate) console.warn("Parser - extractPostDate : Post date not found")
 		return postDate ? new Date(postDate).toISOString() : ""
-	}
-
-	get htmlContent(): HTMLElement | null {
-		return this.html.querySelector("main .entry-content p") ?? null
 	}
 	private extractContentRaw(): string {
 		const htmlContent = this.htmlContent?.innerHTML ?? null
+		if (!htmlContent) console.warn("Parser - extractContentRaw : content not found")
 		return htmlContent ? cleanTextSpaces(htmlContent) : ""
 	}
+	get htmlContent(): HTMLElement | null {
+		return this.html.querySelector("main .entry-content p") ?? null
+	}
 
-	public parseMetadata(): Omit<Quote, "id"> {
-		const quote: Omit<Quote, "id"> = {
+	public parseMetadata(): ScrapedQuote {
+		const quote: ScrapedQuote = {
 			title: this.extractTitle(),
 			url: "",
 			type: "QUOTE_IMAGE",
@@ -57,10 +58,10 @@ export class QuoteExtractor implements IQuoteExtractor {
 		return quote
 	}
 
-	public parseLines(): Omit<QuoteLine, "id">[] {
+	public parseLines(): ScrapedQuoteLine[] {
 		const p = this.htmlContent
 
-		const lines: QuoteLine[] = []
+		const lines: ScrapedQuoteLine[] = []
 		if (!p) return lines
 
 		// Chaque "bloc" de ligne est un span + texte suivant + br

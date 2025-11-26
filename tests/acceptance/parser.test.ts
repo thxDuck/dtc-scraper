@@ -3,8 +3,8 @@ import path from "node:path"
 import parse from "node-html-parser"
 import { describe, expect, test } from "vitest"
 import { cleanTextSpaces } from "../../src/helpers"
-import { type IHtmlParser, QuoteExtractor } from "../../src/parser/quote-parser"
-import type { Quote, QuoteLine } from "../../src/types"
+import type { ScrapedQuote, ScrapedQuoteLine } from "../../src/infrastructure/scraper/dto/scraped-quote.dto"
+import { type IHtmlParser, QuoteExtractor } from "../../src/infrastructure/scraper/quote-parser"
 
 const quoteFilePath = path.resolve("tests/fixtures/quote_1.html")
 const getHtmlContent = (): string => {
@@ -19,7 +19,7 @@ const expectedContent = `<span class="decoration" style="font-weight: bold;color
 <span class="decoration" style="font-weight: bold;color: RGB(148,85,242);">barBe:</span> pas besoin de se nourrir<br>
 <span class="decoration" style="font-weight: bold;color: RGB(148,85,242);">barBe:</span> suffit de tuer des monstres et de fouiller leurs corps`
 
-const expectedQuote: Quote = {
+const expectedQuote: ScrapedQuote = {
 	title: "🎲 La vie est un jeu de rôle",
 	id: 7,
 	url: "",
@@ -30,7 +30,7 @@ const expectedQuote: Quote = {
 	scrapedAt: "",
 }
 
-const expectedLines: QuoteLine[] = [
+const expectedLines: ScrapedQuoteLine[] = [
 	{
 		author: "MickBim",
 		color: "RGB(242,85,106)",
