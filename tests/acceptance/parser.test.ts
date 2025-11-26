@@ -4,9 +4,9 @@ import parse from "node-html-parser"
 import { describe, expect, test } from "vitest"
 import { cleanTextSpaces } from "../../src/helpers"
 import type { ScrapedQuote, ScrapedQuoteLine } from "../../src/infrastructure/scraper/dto/scraped-quote.dto"
-import { type IHtmlParser, QuoteExtractor } from "../../src/infrastructure/scraper/quote-parser"
+import { type IHtmlParser, QuoteExtractor } from "../../src/infrastructure/scraper/html-parser"
 
-const quoteFilePath = path.resolve("tests/fixtures/quote_1.html")
+const quoteFilePath = path.resolve("tests/fixtures/quote_7.html")
 const getHtmlContent = (): string => {
 	return readFileSync(quoteFilePath, "utf8")
 }

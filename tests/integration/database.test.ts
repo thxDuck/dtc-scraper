@@ -1,23 +1,6 @@
 import { describe, expect, it } from "vitest"
+import { tryCatchWrapper } from "../../src/helpers"
 import { Database, type DatabaseConfig } from "../../src/infrastructure/database/database"
-
-/**
- * Wrapper pour exécuter une fonction avec gestion automatique des erreurs.
- * @param fn - La fonction à exécuter
- * @returns Un tuple [result, null] si succès, ou [null, error] si exception
- */
-function tryCatchWrapper<T>(fn: () => T): [T, null] | [null, Error] {
-	try {
-		const result = fn()
-		return [result, null]
-	} catch (error) {
-		if (error instanceof Error) {
-			return [null, error]
-		}
-		// Si ce n'est pas une instance de Error, on enveloppe dans un Error
-		return [null, new Error(String(error))]
-	}
-}
 
 const VALID_DATABASE_CONFIG: DatabaseConfig = {
 	host: "localhost",
