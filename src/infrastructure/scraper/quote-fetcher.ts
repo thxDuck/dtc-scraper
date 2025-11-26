@@ -27,7 +27,6 @@ export class HtmlFetcher implements IHtmlFetcher {
 			}),
 		)
 		if (error || !response) throw error ? error : new Error(`Fail to fetch url: ${response}`)
-		const htmlContent = await response.text()
-		return htmlContent
+		return await response.text()
 	}
 }
