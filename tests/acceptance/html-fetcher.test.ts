@@ -47,8 +47,68 @@ describe("Html fetcher", () => {
 			expect(htmlContent).toStrictEqual(null)
 		})
 	})
-	describe.todo("check URL", () => {
-		it.todo("Should return an empty string", async () => {})
-		it.todo("Should throw an error if url is not valid", async () => {})
+	describe("check URL", () => {
+		describe("Can fetch and parse valid url", () => {
+			it.each([
+				{ url: "https://danstonchat.com", toBe: "https://danstonchat.com/", testCase: "Valid email" },
+				{
+					url: "https://danstonchat.com/quote/🍟-pompe-a-frite.html",
+					toBe: "https://danstonchat.com/quote/%F0%9F%8D%9F-pompe-a-frite.html",
+					testCase: "Url with emoji",
+				},
+				{
+					url: "https://danstonchat.com/quote/%f0%9f%8d%9f-pompe-a-frite.html",
+					toBe: "https://danstonchat.com/quote/%f0%9f%8d%9f-pompe-a-frite.html",
+					testCase: "Url with encoded emoji",
+				},
+				{
+					url: "https://danstonchat.com/quote/80.html",
+					toBe: "https://danstonchat.com/quote/80.html",
+					testCase: "Valid email",
+				},
+			])("$testCase", async ({ url, toBe }) => {
+				const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue({
+					ok: true,
+					status: 200,
+					text: vi.fn().mockResolvedValue("<body></body>"),
+				} as unknown as Response)
+
+				const fetcher = new HtmlFetcher()
+				const [_, error] = await tryCatchWrapperAsync(fetcher.get(url))
+
+				expect(error).toStrictEqual(null)
+				const firstArgumentFetchCall = fetchSpy.mock.calls[0]?.[0] ?? "NOT_VALID"
+				expect(fetchSpy).toHaveBeenCalledOnce()
+				expect(firstArgumentFetchCall).toStrictEqual(toBe)
+			})
+		})
+		describe("throw an error if url is invalid", () => {
+			it.each([
+				{ url: "danstonchat.com", testCase: "Only domain" },
+				{ url: "http://danstonchat.com/quote/80.html", testCase: "Unsafe Http" },
+				{ url: "http://localhost:3000/test", testCase: "Only domain" },
+				{ url: "https", testCase: "only protocol" },
+				{ url: "https://", testCase: "only protocol" },
+				{ url: "ftp://example.com", testCase: "Protocol ftp" },
+				{ url: "ht!tps://bad", testCase: "Only domain" },
+				{ url: "url is a lie", testCase: "Simple string" },
+				{ url: "", testCase: "Empty string" },
+				{ url: 55, testCase: "A number ? Seriousely ?" },
+				{ url: 55n, testCase: "A big int..." },
+				{ url: { url: "https://danstonchat.com" }, testCase: "An object" },
+			])("$testCase", async ({ url }) => {
+				const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue({
+					ok: true,
+					status: 200,
+					text: vi.fn().mockResolvedValue("<body></body>"),
+				} as unknown as Response)
+
+				const fetcher = new HtmlFetcher()
+				const [_, error] = await tryCatchWrapperAsync(fetcher.get(url as string))
+
+				expect(error, `This url shouldn't be valid ! (url=${url})`).toBeInstanceOf(Error)
+				expect(fetchSpy).not.toHaveBeenCalledOnce()
+			})
+		})
 	})
 })

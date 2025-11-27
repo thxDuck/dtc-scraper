@@ -1,4 +1,4 @@
-import { tryCatchWrapperAsync } from "../../helpers"
+import { tryCatchWrapper, tryCatchWrapperAsync } from "../../helpers"
 
 export interface IHtmlFetcher {
 	get(url: string): Promise<string | null>
@@ -18,7 +18,10 @@ const BASIC_HEADERS = {
 }
 
 export class HtmlFetcher implements IHtmlFetcher {
-	async get(url: string): Promise<string | null> {
+	async get(_url: string): Promise<string | null> {
+		const url = parseUrl(_url)
+		if (!url) throw new Error("INVALID_URL")
+
 		const [response, error] = await tryCatchWrapperAsync(
 			fetch(url, {
 				method: "GET",
@@ -29,4 +32,13 @@ export class HtmlFetcher implements IHtmlFetcher {
 		if (error || !response) throw error ? error : new Error(`Fail to fetch url: ${response}`)
 		return await response.text()
 	}
+}
+
+const HTTPS_PROTOCOL = "https:"
+const parseUrl = (url: string): string | null => {
+	const [parsedUrl, error] = tryCatchWrapper(() => new URL(url))
+	if (error) return null
+	if (parsedUrl.protocol !== HTTPS_PROTOCOL) return null
+
+	return parsedUrl.href
 }
