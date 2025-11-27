@@ -5,6 +5,8 @@
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
+		"lint": "biome lint --write",
+		"format": "biome format --write",
 		"test:acceptance": "vitest ./tests/acceptance/*",
 		"test:integration": "vitest ./tests/integration/*"
 	},
