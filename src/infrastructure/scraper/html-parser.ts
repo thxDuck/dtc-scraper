@@ -40,6 +40,12 @@ export class QuoteExtractor implements IQuoteExtractor {
 		if (!htmlContent) console.warn("Parser - extractContentRaw : content not found")
 		return htmlContent ? cleanTextSpaces(htmlContent) : ""
 	}
+	private extractNextUrl(): string {
+		const nextUrlHtmlLinks = this.html.querySelector("main .post-navigation-link-next a")
+		if (!nextUrlHtmlLinks) console.warn("Parser - extractAuthor : Author not found")
+		const nextUrl = this.html.querySelector("main .post-navigation-link-next a")?.getAttribute("href") ?? null
+		return nextUrl ?? ""
+	}
 	get htmlContent(): HTMLElement | null {
 		return this.html.querySelector("main .entry-content p") ?? null
 	}
@@ -48,6 +54,7 @@ export class QuoteExtractor implements IQuoteExtractor {
 		const quote: ScrapedQuote = {
 			title: this.extractTitle(),
 			url: "",
+			nextUrl: this.extractNextUrl(),
 			type: "QUOTE_IMAGE",
 			author: this.extractAuthor(),
 			rawContent: this.extractContentRaw(),

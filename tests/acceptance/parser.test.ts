@@ -23,6 +23,7 @@ const expectedQuote: ScrapedQuote = {
 	title: "🎲 La vie est un jeu de rôle",
 	id: 7,
 	url: "",
+	nextUrl: "https://danstonchat.com/quote/9.html",
 	type: "QUOTE_TEXT",
 	author: "Chat-nonyme",
 	rawContent: cleanTextSpaces(expectedContent),
@@ -133,6 +134,14 @@ describe("Quote parser", () => {
 				const parser = new QuoteExtractor(htmlContent, htmlParser)
 				const { type } = parser.parseMetadata()
 				expect(type).toStrictEqual("QUOTE_IMAGE")
+			})
+		})
+		describe("Lien suivant", () => {
+			test("Url contenu dans le bouton next", () => {
+				const htmlContent = getHtmlContent()
+				const parser = new QuoteExtractor(htmlContent, htmlParser)
+				const { nextUrl } = parser.parseMetadata()
+				expect(nextUrl).toStrictEqual(expectedQuote.nextUrl)
 			})
 		})
 	})
